@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user_result = mysqli_query($connect, $user_sql);
     $user_row = mysqli_fetch_assoc($user_result);
 
-    if ($password !== $user_row['user_pwd']) {
+    if (!password_verify($password, $user_row['user_pwd'])) {
         echo "<script>alert('비밀번호가 틀렸습니다.');</script>";
         echo "<script>location.replace('./index.php');</script>";
         exit;
