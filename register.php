@@ -8,9 +8,12 @@ $name = trim($_POST['name']);
 $pwd = trim($_POST['password']);
 
 // db에서 같은 email을 찾기
-$sql = "SELECT * FROM user_list WHERE user_email = '$email'";
-// 그 결과를 $result 변수에 저장
-$result = mysqli_query($connect, $sql);
+// prepared statement 사용
+$sql = "SELECT * FROM user_list WHERE user_email = ?";
+$stmt = mysqli_prepare($connect, $sql); // statement object 생성
+mysqli_stmt_bind_param($stmt, "s", $email); // 문자열 1개에 대해 실제 값 binding
+mysqli_stmt_execute($stmt); // query 실행하고 결과 얻기
+$result = mysqli_stmt_get_result($stmt); // 결과 반환
 
 // query가 몇 줄 나왔는지 확인하기 
 if (mysqli_num_rows($result) > 0) // 같은 이메일 존재하는지 중복 확인
@@ -23,9 +26,12 @@ if (mysqli_num_rows($result) > 0) // 같은 이메일 존재하는지 중복 확
 // 회원가입 성공 시 그 정보 db에 저장
 else
 {
-    $sql = "INSERT INTO user_list (user_email, user_name, user_pwd) VALUES ('$email', '$name', '$pwd')";
+    $hashed_pwd = password_hash($pwd, PASSWORD_DEFAULT);
+    $sql = "INSERT INTO user_list (user_email, user_name, user_pwd) VALUES (?, ?, ?)";
+    $stmt = mysqli_prepare($connect, $sql);
+    mysqli_stmt_bind_param($stmt, "sss", $email, $name, $hashed_pwd);
     
-    if (mysqli_query($connect, $sql)) 
+    if (mysqli_stmt_execute($stmt)) 
     {
         // 회원가입 성공하면 index 페이지로 가기
         echo "<script>alert('회원가입 성공');</script>";
