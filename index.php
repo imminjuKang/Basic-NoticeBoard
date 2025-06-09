@@ -9,7 +9,6 @@ include("./dbconnect.php");
 
 <div class="loginButton">
     <?php
-    // 로그인이 되어 있으면 로그아웃
     if (isset($_SESSION['user_email'])) {
     ?>
         <a href="logout.php">로그아웃</a>
@@ -25,7 +24,6 @@ include("./dbconnect.php");
 
 <div class="index">
     <h1>게시판</h1>
-    <!--글쓰기는 로그인이 되었을 때만 가능-->
     <?php
     if (isset($_SESSION['user_email'])) {
     ?>
@@ -58,9 +56,10 @@ include("./dbconnect.php");
         while ($row = mysqli_fetch_array($result)) {
             echo "<tr>";
             echo "<td>" . $row['post_id'] . "</td>";
-            // 제목을 누르면 해당 글을 확인할 수 있게 제목에 href 걸기
-            echo "<td><a href='view.php?post_id={$row['post_id']}'>" . $row['post_title'] . "</a></td>";
-            echo "<td>" . $row['user_name'] . "</td>";
+            // 해당 글이 조작되는 것을 방지하여 코드 작성
+            // htmlentities() 함수 사용
+            echo "<td><a href='view.php?post_id={$row['post_id']}'>" . htmlspecialchars($row['post_title']) . "</a></td>";
+            echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
             echo "<td>" . $row['post_views'] . "</td>";
             echo "</tr>";
         }
