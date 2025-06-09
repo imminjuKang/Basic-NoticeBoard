@@ -25,10 +25,10 @@ $row = mysqli_fetch_assoc($result);
     <!--누른 그 게시물 출력해주기-->
     <h1>게시글</h1>
     <label>제목</label>
-    <p><?php echo $row['post_title'] ?></p><br>
+    <p><?php echo htmlentities($row['post_title']) ?></p><br>
 
     <label>내용</label><br>
-    <p><?php echo $row['post_content'] ?></p><br>
+    <p><?php echo htmlentities($row['post_content']) ?></p><br>
 
     <?php
     if ($row['post_file']) {
