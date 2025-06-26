@@ -10,4 +10,6 @@
 
 - 디렉토리 리스팅 문제 : apache2.conf, 000-default.conf 파일에서 indexes 옵션 삭제
 
--
+
+
+
